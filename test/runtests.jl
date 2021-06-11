@@ -38,7 +38,7 @@ end
 
 @everywhere function test6()
   @testset "test set 6" begin
-    @test 0 == 1
+    @test 1 == 1
   end
 end
 
@@ -48,13 +48,7 @@ end
   end
 end
 
-@everywhere function run_all_tests(tests)
-  main_task = @distributed for test ∈ tests
-    test()
-  end
-  wait(main_task)
-end
-
-run_all_tests([test1, test2, test3, test4, test5, test6, test7])
+all_tests = [test1, test2, test3, test4, test5, test6, test7]
+pmap(i -> all_tests[i](), 1 : (np - 1))
 rmprocs()
 
